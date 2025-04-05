@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Detection : MonoBehaviour
 {
     [Header("Base detector settings")]
     [SerializeField, Tooltip("Target for detection")]
-    private Transform _target;
+    private List<Transform> _targets;
     [SerializeField, Tooltip("Detector scale arrow")]
     private RectTransform _arrow;
     [SerializeField, Tooltip("Maximum work ditance")]
@@ -23,6 +24,29 @@ public class Detection : MonoBehaviour
     private float _maxPeepDistance;
     private float _secondsBetweenPeeps = -1;
 
+    private static Detection m_instance;
+
+    public static Detection GetInstance()
+    {
+        return m_instance;
+    }
+
+    public void RemoveTarget(in Transform target)
+    {
+        _targets.Remove(target);
+    }
+
+    public bool AllTargetCollected()
+    {
+        return _targets.Count == 0;
+    }
+
+    private void Awake()
+    {
+        if (m_instance == null)
+            m_instance = this;
+    }
+
     private void Start()
     {
         _maxPeepDistance = _maxDetectDistance / 2f;
@@ -33,10 +57,25 @@ public class Detection : MonoBehaviour
     {  
         if (transform.hasChanged)
         {
-            float distance = Vector3.Distance(transform.position, _target.position);
+            float distance = GetMinTargetDistance();
             SetArrow(distance);
             SetPeepFrequency(distance);
         }
+    }
+
+    private float GetMinTargetDistance()
+    {
+        float distance, minDistance = 10000f;
+
+        foreach (var target in _targets)
+        {
+            distance = Vector3.Distance(transform.position, target.position);
+            
+            if (minDistance > distance)
+                minDistance = distance;
+        }
+
+        return minDistance;
     }
 
     private void SetArrow(float distance)
