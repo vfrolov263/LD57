@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
-public class StartGame : MonoBehaviour
+public class Restart : MonoBehaviour
 {
-    [SerializeField, Tooltip("Player Object")]
-    private GameObject _player;
     [SerializeField, Tooltip("Click input")]
     private InputAction _pressAction;
 
-    private void Start()
+    private void Awake()
     {
         _pressAction.Enable();
-        _pressAction.performed += _ => Click();   
+        _pressAction.performed += _ => Click();
     }
 
     void OnDestroy()
@@ -22,7 +21,6 @@ public class StartGame : MonoBehaviour
 
     private void Click()
     {
-        _player.GetComponent<Movement>().enabled = true;
-        Destroy(gameObject);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 }

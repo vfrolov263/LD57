@@ -74,6 +74,9 @@ public class HandAction : MonoBehaviour
             
             GameObject target = raycastHit.transform.gameObject;
 
+            if (_target == target)
+                return;
+
             if (target.tag == "Physical" || target.tag == "Coin")
             {
                 if (!_cursor.activeSelf)

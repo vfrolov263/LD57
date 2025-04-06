@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class OxygenControl : MonoBehaviour
 {
@@ -10,6 +9,8 @@ public class OxygenControl : MonoBehaviour
     private float _oxygenScoreTime = 1f;
     [SerializeField, Tooltip("Oxygen panel object")]
     private GameObject _oxygenPanel;
+    [SerializeField, Tooltip("Restart screen")]
+    private GameObject _restartScreen;
     private int _oxygenScores;
     private Coroutine _useOxygen;
 
@@ -48,6 +49,7 @@ public class OxygenControl : MonoBehaviour
             yield return new WaitForSeconds(_oxygenScoreTime);
         }
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        transform.parent.GetComponent<Movement>().enabled = false;
+        _restartScreen.SetActive(true);
     }
 }
